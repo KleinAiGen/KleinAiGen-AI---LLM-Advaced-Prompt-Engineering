@@ -1,0 +1,78 @@
+A React (Reasoning and Acting) Prompting Legfőbb Jellemzői
+
+A React (Reasoning and Acting) prompting egy olyan fejlett technika, amely ötvözi a gondolkodást (reasoning, azaz a Chain of Thought – CoT) az akciókkal (acting). Ez a megközelítés lehetővé teszi a nagy nyelvi modellek (LLM-ek) számára, hogy összetettebb feladatokat oldjanak meg hatékonyabban, dinamikusan alkalmazkodva a környezeti visszajelzésekhez és a hibákhoz. A CoT önmagában is jelentős előrelépést hozott a modellek gondolkodási képességében, de a React ezt kiegészíti a konkrét, külső eszközökkel végrehajtott műveletekkel, így teremtve egy robusztusabb és önállóbb problémamegoldó rendszert.
+A Reasoning és Acting Szinergiája
+
+A React prompting alapja az a felismerés, hogy a pusztán belső gondolkodás (reasoning) korlátozott lehet, ha a modellnek valós adatokra van szüksége, vagy külső rendszerekkel kell interakcióba lépnie. Az acting komponens hidat képez a modell belső logikája és a külvilág között.
+Reasoning (Gondolkodás)
+
+A gondolkodási fázis során az LLM belsőleg generálja a gondolatmenetét, hasonlóan a Chain of Thought promptinghoz. Ennek célja, hogy feltárja a probléma logikai lépéseit, stratégiákat dolgozzon ki, és megtervezze a következő akciót. Ez a lépés segít abban, hogy a modell ne találomra próbálkozzon, hanem megalapozott döntéseket hozzon.
+
+    Problémaelemzés: A modell lebontja a feladatot kisebb, kezelhetőbb részekre.
+    Stratégia kidolgozása: Meghatározza a lehetséges megoldási utakat és azok sorrendjét.
+    Következő lépés tervezése: Előrejelzi, hogy melyik akcióra van szükség a cél eléréséhez.
+
+Acting (Akciók)
+
+Az akció fázisban a modell a gondolkodási fázisban hozott döntések alapján végrehajt konkrét műveleteket. Ezek az akciók lehetnek külső API-hívások, adatbázis-lekérdezések, weboldalak elemzése, vagy bármilyen olyan művelet, amelyre a modellnek szüksége van a feladat elvégzéséhez. Az akciók eredményei visszatáplálódnak a modellhez, befolyásolva a következő gondolkodási fázist.
+
+    Eszközhasználat: A modell kiválasztja a megfelelő eszközt (pl. kereső, számológép, kódértelmező).
+    Végrehajtás: Meghívja az eszközt a szükséges paraméterekkel.
+    Eredményfeldolgozás: Az eszköz által visszaadott információt értelmezi és beépíti a további gondolkodásba.
+
+A Dinamikus Hibakezelés
+
+A React prompting egyik legkiemelkedőbb előnye a beépített, dinamikus hibakezelési mechanizmusa. A hagyományos CoT prompting esetén, ha a gondolatmenet hibás, vagy egy lépés sikertelen, a modell gyakran elakad, vagy téves úton halad tovább. A React esetében, ha egy akció sikertelen, a modell nem áll le, hanem képes elemezni a hiba okát, és alternatív stratégiát kidolgozni, vagy újrapróbálkozni. Ez jelentősen csökkenti a felhasználói beavatkozás szükségességét, és növeli a rendszer autonómiáját.
+A Hibakezelés Menete
+
+    Akció Végrehajtása: A modell a gondolkodási fázisban hozott döntés alapján végrehajt egy akciót.
+    Visszajelzés Értékelése: Az akció eredményeként a modell visszajelzést kap (pl. sikeres végrehajtás, hibaüzenet, üres eredmény).
+    Hiba Detektálása: Ha a visszajelzés hibát jelez (pl. API hiba, érvénytelen bemenet, időtúllépés), a modell felismeri azt.
+    Hiba Analízis: A modell visszatér a gondolkodási fázisba, és elemzi a hiba okát a rendelkezésre álló kontextus alapján. Megpróbálja megérteni, miért volt sikertelen az akció.
+    Alternatív Stratégia Kidolgozása/Újrapróbálkozás: A hiba elemzése alapján a modell több lehetőséget is megfontolhat:
+        Paraméterek módosítása: Ha a hiba a bemeneti paraméterekkel kapcsolatos, megpróbálhatja azokat finomítani.
+        Másik eszköz használata: Ha egy adott eszköz nem működik, megpróbálhat egy alternatív eszközt használni, ami hasonló funkciót lát el.
+        Más megközelítés: Teljesen új gondolkodásmenetet kezdhet, ha az eredeti stratégia alapvetően hibásnak bizonyult.
+        Újrapróbálkozás: Bizonyos esetekben, ha a hiba átmeneti, egyszerűen újrapróbálkozhat az eredeti akcióval.
+    Folytatás: A modell az új stratégia vagy módosított akció alapján folytatja a feladatot.
+
+Ez az iteratív folyamat biztosítja, hogy a modell képes legyen önállóan navigálni a bonyolult és változékony környezetekben, minimalizálva az emberi felügyelet igényét.
+Példa egy React Prompt Strukturára
+
+A React prompting promptjának felépítése általában magában foglalja a feladat leírását, a rendelkezésre álló eszközöket és azok használati utasításait, valamint a gondolkodási és akció fázisok mintáit.
+javascript
+
+Feladat: [A megoldandó probléma részletes leírása]
+
+Rendelkezésre álló eszközök:
+1. `kereso_eszköz(query: str)`: Internetes keresést végez a megadott lekérdezéssel. Visszatér a releváns találatok összefoglalójával.
+2. `szamol_eszköz(expression: str)`: Matematikai kifejezést értékel ki. Visszatér az eredménnyel.
+
+Formátum:
+Thought: A gondolkodásmenetedet írd le itt.
+Action: A végrehajtandó akciót add meg itt. Formátum: `eszköz_neve(paraméter)`
+Observation: Az akció eredménye.
+
+Példa Interakció:
+Thought: Meg kell tudnom a Föld átmérőjét. A "kereso_eszköz" megfelelő lehet erre.
+Action: kereso_eszköz("Föld átmérője")
+Observation: A Föld átmérője kb. 12 742 km.
+
+Thought: Most tudom a Föld átmérőjét. Tudnom kell az átlagos sebességét, amivel egy űrhajó megteszi a Holdig tartó utat (kb. 384 400 km) ha 3 nap alatt ér el oda. Ehhez a "szamol_eszköz" szükséges. Először kiszámolom az órákat.
+Action: szamol_eszköz("3 * 24")
+Observation: 72
+
+Thought: Most kiszámolom a sebességet km/órában.
+Action: szamol_eszköz("384400 / 72")
+Observation: 5338.888888888889
+
+Thought: Az űrhajó átlagos sebessége körülbelül 5338.89 km/óra.
+
+[A tényleges feladat kezdete]
+Feladat: Keresd meg a mai napi arany árfolyamot USD-ben, majd számold ki, hány gramm aranyat lehet vásárolni 1000 USD-ből.
+Thought:
+
+Ebben a struktúrában a modell felváltva generálja a "Thought" (gondolkodás) és az "Action" (akció) lépéseket. Az "Observation" (megfigyelés) az akció eredményét mutatja, amelyet a modell felhasznál a következő "Thought" generálásához. Ha az "Observation" hibaüzenetet tartalmaz, a modellnek képesnek kell lennie arra, hogy ezt a hibát értelmezze, és új gondolatmenetet indítson a probléma megoldására.
+Összefoglalás
+
+A React prompting egy erőteljes paradigma, amely a Reasoning (gondolkodás) és Acting (akciók) kombinálásával forradalmasítja az LLM-ek problémamegoldó képességét. A dinamikus hibakezelés beépítése különösen kiemelkedő jellemzője, amely lehetővé teszi a modellek számára, hogy rugalmasan és autonóm módon reagáljanak a sikertelen akciókra, csökkentve ezzel a felhasználói beavatkozás szükségességét. Ezáltal a React prompting sokkal megbízhatóbb és hatékonyabb megoldást kínál komplex, több lépésből álló feladatok végrehajtására, amelyek külső eszközökkel való interakciót igényelnek.
