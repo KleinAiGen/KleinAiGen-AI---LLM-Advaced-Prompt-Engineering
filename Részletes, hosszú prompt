@@ -1,0 +1,109 @@
+Részletes, hosszú prompt (vektor / RAG irányító prompt) útmutató
+
+Ez az útmutató bemutatja, hogyan használhatunk részletes, hosszú promptokat (gyakran nevezik "vektor / RAG irányító promptoknak") a Retrieve-Augmented Generation (RAG) és vektoros keresési rendszerek hatékonyságának növelésére. Ezek a promptok kulcsfontosságúak a releváns kontextus kinyeréséhez, biztosítva, hogy a keresési eredmények pontosan illeszkedjenek a felhasználó szándékához, és maximalizálják a generált válaszok minőségét.
+A Részletes Promptok Szerepe a Keresési Rendszerekben
+
+A modern információszerzési rendszerek, mint a RAG és a vektoros keresés, nagymértékben támaszkodnak a kontextus relevanciájára. Egy egyszerű lekérdezés gyakran nem elegendő ahhoz, hogy pontosan megragadja a felhasználó igényeit, különösen összetett vagy nüansznyi témák esetén. Itt jönnek képbe a részletes, hosszú promptok. Ezek a promptok nem csupán kulcsszavak gyűjteményei; sokkal inkább mini-leírások vagy részletes kérések, amelyek pontosan specifikálják, mit várunk el a visszaadott kontextustól.
+Miért Fontosak?
+
+    Pontosabb Keresés: A részletes promptok segítenek a keresési algoritmusoknak jobban megérteni a felhasználó szándékát, ami relevánsabb dokumentumokat vagy szövegrészleteket eredményez.
+    Relevancia Súlyozása: Lehetővé teszik a keresési kimenetek súlyozását, előnyben részesítve azokat a találatokat, amelyek a promptban leírt specifikus kritériumoknak jobban megfelelnek.
+    Zaj Csökkentése: A precíz megfogalmazás csökkenti a irreleváns, "zajos" információ visszatérésének esélyét, ami elengedhetetlen a generatív modellek hatékony működéséhez.
+    Jobb Generált Válaszok: A magas minőségű, releváns kontextus közvetlenül javítja a nagy nyelvi modellek (LLM-ek) által generált válaszok pontosságát, koherenciáját és hasznosságát.
+
+A Vektor / RAG Irányító Promptok Kialakítása
+
+Az irányító promptok megfogalmazása művészet és tudomány is egyben. Céljuk, hogy a keresési rendszer számára egyértelmű és gazdag kontextust biztosítsanak. Az alábbiakban bemutatjuk a kulcsfontosságú elemeket és stratégiákat.
+A Prompt Szerkezete és Tartalma
+
+Egy hatékony irányító promptnak több rétegűnek kell lennie, és magában kell foglalnia a keresés célját, a kívánt kimenet jellemzőit, és a kontextusra vonatkozó elvárásokat.
+
+    A Felhasználói Kérdés/Igény Magja: Ez az alapvető lekérdezés, ami elindítja a keresést. Lehet egy egyszerű kérdés vagy egy kijelentés.
+        Példa: "Mi az atomenergia előnye?"
+    Kontextuális Kiegészítések: Adjon hozzá információkat, amelyek pontosítják a felhasználó szándékát. Milyen aspektusra fókuszáljon a keresés?
+        Példa kiegészítéssel: "Mi az atomenergia előnye? Különösen a környezeti fenntarthatóság és a gazdasági hatékonyság szempontjából érdekel."
+    Elvárások a Visszaadott Kontextussal Kapcsolatban: Specifikálja, milyen típusú információkat vár a visszaadott dokumentumoktól.
+        Példa: "A keresésnek olyan szakaszokat kell visszaadnia, amelyek részletesen leírják az atomenergia pozitívumait, összehasonlítva azt más energiaforrásokkal, adatokkal és statisztikákkal alátámasztva. Kerülje a politikai vagy szociális aspektusokat, fókuszáljon a technikai és ökológiai előnyökre."
+    Formátum és Strukturális Elvárások (opcionális): Bár ez inkább a generatív modell kimenetére vonatkozik, segíthet a keresés fókuszálásában is, ha a forrásanyag formátuma befolyásolja a keresési relevanciát.
+        Példa: "Keresd azokat a cikkeket vagy tanulmányokat, amelyek bekezdésekben és pontokba szedve mutatják be az előnyöket."
+
+Példa egy Átfogó Irányító Promptra
+text
+
+Felhasználói lekérdezés: "Hogyan optimalizálható egy weboldal a mobil eszközökre?"
+
+Részletes Irányító Prompt a Vektor/RAG Kereséshez:
+"A felhasználó egy weboldal mobil optimalizálási stratégiáiról érdeklődik. Kérem, keressen és adjon vissza olyan dokumentumrészleteket, amelyek részletes, technikai útmutatást nyújtanak a következő témákban:
+1.  **Reszponzív Design Elvek:** Leírások a CSS media query-k használatáról, flexbox, grid layout.
+2.  **Teljesítmény Optimalizálás:** Képek tömörítése, lazy loading, gyorsítótárazás (caching), kritikus CSS.
+3.  **Felhasználói Élmény (UX):** Érintőbarát elemek, olvasható betűméretek, egyszerű navigáció, viewport beállítások.
+4.  **SEO Szempontok:** Mobilbarát tesztek, Google PageSpeed Insights eredmények javítása, mobil indexelés.
+
+Kérjük, a visszaadott kontextus *kerülje* az alapvető HTML-tudás magyarázatát, és *fókuszáljon* a haladó technikákra és bevált gyakorlatokra. Előnyben részesítse azokat a forrásokat, amelyek kódpéldákat, konkrét implementációs lépéseket és esettanulmányokat tartalmaznak. A kontextusnak naprakész információkat kell tartalmaznia, 2020 utáni publikációkból. Ideális esetben a források 'how-to' típusú cikkek, fejlesztői dokumentációk vagy szakmai blogbejegyzések."
+
+A Prompt Beágyazása és Vektorizálása
+
+Miután megfogalmaztuk a részletes promptot, a következő lépés annak előkészítése a vektoros keresési rendszerek számára. Ez a beágyazás (embedding) és vektorizálás folyamata.
+Beágyazás (Embedding)
+
+A beágyazás során a szöveges promptot egy numerikus vektorrá alakítjuk át. Ez a vektor a prompt szemantikai jelentését kódolja egy magas dimenziós térben. Az egymáshoz hasonló jelentésű szövegek vektorai közel helyezkednek el ebben a térben.
+
+    Modellek: Különböző előre kiképzett modellek léteznek a beágyazások generálására (pl. OpenAI text-embedding-ada-002, Sentence-BERT, vagy egyéb specifikus modellek).
+    Folyamat: A prompt szövegét bemenetként adjuk a beágyazási modellnek, amely visszaad egy fix méretű numerikus vektort.
+
+python
+
+from openai import OpenAI
+client = OpenAI()
+
+def get_embedding(text, model="text-embedding-ada-002"):
+   text = text.replace("\n", " ")
+   return client.embeddings.create(input = [text], model=model).data[0].embedding
+
+detailed_prompt = """
+A felhasználó egy weboldal mobil optimalizálási stratégiáiról érdeklődik. Kérem, keressen és adjon vissza olyan dokumentrészleteket, amelyek részletes, technikai útmutatást nyújtanak a következő témákban:
+... (a fentebbi teljes prompt)
+"""
+
+prompt_embedding = get_embedding(detailed_prompt)
+print(f"Az embedding vektor mérete: {len(prompt_embedding)}")
+
+Vektoros Keresés Használata
+
+Miután a promptot vektorizáltuk, ezt a vektort használjuk keresési feltételként egy vektoradatbázisban (pl. Pinecone, Weaviate, ChromaDB, Milvus). A vektoros keresés során a rendszer megkeresi azokat a dokumentum-embeddingeket, amelyek "hasonlóak" a prompt embeddingjéhez. A hasonlóságot jellemzően koszinusz hasonlóság (cosine similarity) vagy euklideszi távolság (Euclidean distance) metrikával mérik.
+
+    Indexelés: Először is, az összes potenciálisan releváns dokumentumot (vagy azok chunkjait) is vektorizálni kell, és egy vektoradatbázisba kell indexelni.
+    Keresés: A prompt embeddingjét elküldjük a vektoradatbázisnak.
+    Találatok: Az adatbázis visszaadja a leginkább hasonló dokumentumvektorokat, amelyekhez az eredeti szöveges kontextus tartozik.
+    Súlyozás/Szűrés: A visszaadott találatokat további szűrésnek vagy súlyozásnak lehet alávetni a promptban megfogalmazott specifikus kritériumok alapján.
+
+A Visszaadott Kontextus Súlyozása és Finomítása
+
+Az irányító prompt célja nem csak a nyers találatok lekérése, hanem azok relevancia alapján történő rangsorolása és súlyozása is.
+Relevancia Súlyozása
+
+    Metaadatok: Ha a dokumentumok metaadatokat is tartalmaznak (pl. publikációs dátum, téma, kulcsszavak, forrás megbízhatósága), ezeket felhasználhatjuk a találatok súlyozására. A promptban megadhatjuk, hogy mely metaadatok fontosak (pl. "2020 utáni publikációk").
+    Kulcsszó Alapú Utólagos Szűrés/Súlyozás: Annak ellenére, hogy vektoros keresést használunk, bizonyos kulcsszavak jelenléte (vagy hiánya) továbbra is felhasználható a relevancia finomhangolására, különösen, ha a prompt expliciten említ bizonyos fogalmakat.
+    Cross-Encoder Modellek: A retrieved (lekérdezett) dokumentumok további rangsorolására használhatók cross-encoder modellek. Ezek a modellek a lekérdezést és a dokumentumot együttesen vizsgálják, és egy relevanciapontszámot adnak, amely finomabb, mint a vektoros hasonlóság.
+
+Kontextus Szűrése RAG Rendszerekben
+
+A RAG architektúrában a lekérdezett kontextust az LLM bemeneteként használjuk fel. Itt a prompt még kritikusabbá válik, mivel az LLM teljesítménye nagymértékben függ a kapott kontextus minőségétől.
+
+    Kritikus Információk Kiemelése: Az irányító prompt segít abban, hogy az LLM a legrelevánsabb információt kapja meg.
+    Kontextus Hosszának Korlátozása: A túl hosszú kontextus bevitele az LLM-be költséges és ronthatja a teljesítményt. A promptnak segítenie kell a "chunking" stratégiát és a szűrést, hogy csak a leglényegesebb részek kerüljenek be.
+    "Noise" Csökkentése: A precízen megfogalmazott prompt minimalizálja az irreleváns információk bekerülését a promptba, elkerülve a "hallucinációkat" és a félrevezető válaszokat.
+
+Gyakorlati Tippek a Hatékony Irányító Promptokhoz
+
+    Legyen Specifikus: Kerülje az általános megfogalmazásokat. Minél pontosabban írja le, mit keres, annál jobb eredményeket kap.
+    Használjon Kulcsszavakat és Fogalmakat: Bár a vektoros keresés a szemantikára épül, a fontos kulcsszavak és szakterminológia explicit említése megerősítheti a relevanciát.
+    Adjon Meg Negatív Kritériumokat: Mondja el, mit ne tartalmazzon a kontextus (pl. "Kerülje a politikai aspektusokat"). Ez segíthet a "zaj" kiszűrésében.
+    Strukturálja a Promptot: Használjon listákat, bekezdéseket a promptban, hogy a különböző aspektusokat elkülönítse és kiemelje. Ez segíthet a prompt embedding modellnek a különböző részek jelentőségének megértésében.
+    Iteráljon és Teszteljen: A promptok finomhangolása iteratív folyamat. Tesztelje a különböző verziókat, és értékelje a visszaadott kontextus minőségét.
+    Gondoljon a Felhasználó Szándékára: Mindig tegye fel magának a kérdést: mi az igazi célja a felhasználónak ezzel a lekérdezéssel? Milyen típusú választ vár? Ez segít a releváns kontextus azonosításában.
+    Konzisztencia: Ha lehetséges, alakítson ki egy egységes "prompt template"-et a különböző kategóriájú lekérdezésekhez, hogy konzisztens legyen a relevancia értékelése.
+
+Összefoglalás
+
+A részletes, hosszú promptok, vagy vektor / RAG irányító promptok, alapvető fontosságúak a modern információszerzési és generatív rendszerek hatékonyságának maximalizálásához. Azáltal, hogy pontosan leírjuk, mit várunk a visszaadott kontextustól, javítjuk a keresés pontosságát, csökkentjük a zajt, és végül jobb minőségű, relevánsabb válaszokat biztosítunk a végfelhasználók számára. A promptok gondos megfogalmazása, beágyazása és a keresési folyamatba való integrálása kulcsfontosságú a sikeres RAG és vektoros keresési architektúrák kialakításában.
