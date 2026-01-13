@@ -1,0 +1,210 @@
+Strukturált Prompt Kialakítása az LLMService-ben
+
+Az LLMService (vagy hasonló API-k) használatakor egy strukturált prompt sablon alkalmazása alapvető fontosságú a következetes, pontos és megbízható válaszok eléréséhez. Ez a megközelítés biztosítja, hogy minden releváns információt megadjunk az LLM-nek, minimalizálva a kétértelműséget és optimalizálva a modell teljesítményét. A strukturált promptok segítik a reprodukálhatóságot és egyszerűsítik a promptok karbantartását is.
+Miért Fontos a Strukturált Prompt?
+
+A strukturált promptok több előnnyel is járnak, amelyek hozzájárulnak a nagy nyelvi modellekkel (LLM-ekkel) való hatékonyabb interakcióhoz. A legfőbb okok közé tartozik a konzisztencia, a pontosság és a hibák minimalizálása.
+Konzisztencia és Reprodukálhatóság
+
+A jól definiált struktúra garantálja, hogy minden egyes prompt ugyanazokat az alapvető komponenseket tartalmazza, függetlenül attól, hogy ki vagy milyen automatizált rendszer generálja azt. Ez a konzisztencia elengedhetetlen a reprodukálható eredményekhez, ami különösen fontos a tesztelés, hibakeresés és a termelési környezetben történő üzemeltetés során. Ugyanazokkal a bemeneti paraméterekkel konzisztensen hasonló kimeneteket kaphatunk.
+Pontosság és Relevancia
+
+A strukturált promptok segítségével célzottan adhatunk meg kontextuális információkat, instrukciókat és korlátozásokat. Ez lehetővé teszi az LLM számára, hogy jobban megértse a feladatot és relevánsabb, pontosabb válaszokat generáljon. A felesleges vagy zavaró információk elkerülése szintén javítja a modell fókuszát.
+Hibák Minimalizálása
+
+Az explicit utasítások és a jól definiált bemeneti formátumok csökkentik a félreértések kockázatát. Az LLM kevésbé valószínű, hogy tévesen értelmezi a kérést, ha a prompt egyértelműen és strukturáltan van megfogalmazva. Ez kevesebb utólagos szerkesztést és javítást igényel.
+Hatékonyság és Költséghatékonyság
+
+A pontosabb promptok kevesebb generációt igényelnek a kívánt eredmény eléréséhez, ami csökkentheti az API hívások számát és ezáltal a költségeket. Emellett a promptok sablonizálása felgyorsítja a fejlesztési folyamatot és egyszerűsíti a karbantartást.
+Tipikus Strukturált Prompt Elemek
+
+Egy jól felépített strukturált prompt számos elemet tartalmazhat, amelyek mindegyike specifikus célt szolgál. Az alábbiakban bemutatjuk a leggyakoribb és leghasznosabb komponenseket, amelyek egy hatékony prompt sablon részét képezhetik.
+1. Rendszerüzenet (System Message)
+
+A rendszerüzenet egy magas szintű instrukció, amely az LLM viselkedését, szerepét vagy alapvető szabályait határozza meg a teljes beszélgetés során. Ez az üzenet gyakran a prompt elején helyezkedik el, és alapvető kontextust biztosít. Fontos, hogy ez az üzenet legyen a lehető legvilágosabb és legspecifikusabb.
+
+    Célja: Az LLM alapvető viselkedésének beállítása, szerep meghatározása (pl. "szakértő marketinges vagy", "segítőkész asszisztens vagy").
+    Példa:
+    javascript
+
+    SYSTEM: Ön egy magyar nyelvű, professzionális tartalomíró. A feladata, hogy tömör, informatív és olvasmányos cikkeket írjon, betartva a megadott stílust és formátumot. Kerülje a felesleges ismétléseket és a terjengős mondatokat.
+
+2. Konkrét Feladat (Task/Goal)
+
+Ez az elem egyértelműen megfogalmazza, hogy mit szeretnénk, hogy az LLM elvégezzen. Ez a prompt legfontosabb része, mivel közvetlenül meghatározza a kimenet tartalmát és célját.
+
+    Célja: A kérés lényegének meghatározása, mit kell pontosan generálnia az LLM-nek.
+    Példa:
+    javascript
+
+    TASK: Készítsen egy rövid összefoglalót a megadott szövegről, kiemelve a főbb pontokat és következtetéseket.
+
+3. Kontextus (Context)
+
+A kontextus további háttérinformációt, előzményeket vagy releváns adatokat szolgáltat, amelyek segítik az LLM-et a feladat pontos megértésében. Ez lehet egy cikk, beszélgetésrészlet, adatbázis rekord vagy bármilyen más releváns szöveg.
+
+    Célja: Az LLM-nek olyan információk biztosítása, amelyek szükségesek a feladat teljesítéséhez.
+    Példa:
+    javascript
+
+    CONTEXT:
+    Az alábbiakban egy tudományos cikk kivonata olvasható a mesterséges intelligencia etikai vonatkozásairól. Különös figyelmet fordít a félrevezető információk terjedésére és az algoritmikus torzításokra.
+    """
+    [IDE JÖN A HOSSZÚ SZÖVEG, CIKK, ADAT STB.]
+    """
+
+4. Bemeneti Adatok (Input Data)
+
+Ez az a specifikus adat, amelyen az LLM-nek dolgoznia kell. Ez lehet egy felhasználói kérés, egy dokumentum részlete, paraméterek listája, vagy bármilyen adat, amelyet a feladat megkövetel. Fontos, hogy az adatok formátuma konzisztens legyen.
+
+    Célja: A feladat végrehajtásához szükséges konkrét adatok átadása.
+    Példa:
+    javascript
+
+    INPUT:
+    - Termék neve: Okosóra X
+    - Fő jellemzők: Pulzusmérés, GPS, vízálló (50m), akkumulátor élettartam: 7 nap
+    - Célközönség: Sportolók, aktív életmódot élők
+
+5. Példák (Examples - Few-shot Prompting)
+
+A few-shot prompting során konkrét bemeneti-kimeneti párokat adunk meg, hogy az LLM megértse a kívánt válasz formátumát és stílusát. Ez rendkívül hatékony a finomhangolás nélküli modellek esetében, vagy amikor speciális formátumot várunk el.
+
+    Célja: Az LLM "tanítása" a kívánt kimeneti formátumra és stílusra mintapéldák segítségével.
+    Példa:
+    javascript
+
+    EXAMPLES:
+    Kérés: "Foglalja össze a marketing kampányunkat."
+    Válasz: "A marketing kampány célja az új termék bevezetése, digitális hirdetésekkel és közösségi média aktivitással. A fő cél a márkaismertség növelése."
+
+    Kérés: "Kérem a havi értékesítési jelentés kulcspontjait."
+    Válasz: "Az értékesítés 15%-kal nőtt az előző hónaphoz képest, a legtöbb eladás a B régióból érkezett. A legnépszerűbb termék az Y volt."
+
+6. Kimeneti Formátum (Output Format)
+
+Ez az elem explicit módon meghatározza, milyen formában várjuk a választ (pl. JSON, listák, bullet pointok, összefoglaló, táblázat). A strukturált kimenet különösen hasznos, ha a válaszokat automatikusan szeretnénk feldolgozni.
+
+    Célja: Az LLM kimenetének strukturálása egy adott formátumba.
+    Példa:
+    javascript
+
+OUTPUT_FORMAT:
+Kérem, a válaszát egy JSON objektumként adja meg, a következő mezőkkel: "title", "summary", "keywords" (lista), "sentiment" (pozitív/negatív/neutrális).
+
+vagy
+javascript
+
+    OUTPUT_FORMAT: A válasz egy számozott lista legyen, minden pont egy külön bekezdésben.
+
+7. Korlátozások/Megkötések (Constraints/Guardrails)
+
+Ezek az instrukciók korlátozzák az LLM válaszát, például maximális hosszt, nyelvi stílust, tiltott témákat vagy speciális szabályokat szabnak meg. Segítenek abban, hogy a válasz a kívánt keretek között maradjon.
+
+    Célja: A válasz terjedelmének, stílusának vagy tartalmának szabályozása.
+    Példa:
+    javascript
+
+    CONSTRAINTS:
+    - A válasz maximum 100 szót tartalmazzon.
+    - Kerülje a szleng kifejezéseket.
+    - Csak tényekre szorítkozzon, ne tegyen feltételezéseket.
+
+8. Tonális Iránymutatások (Tone Guidance)
+
+Meghatározza, milyen legyen az LLM válaszának hangneme (pl. formális, informális, humoros, professzionális, empatikus). Ez segít a márka hangjának vagy a kommunikációs stílusnak a fenntartásában.
+
+    Célja: A válasz érzelmi vagy stilisztikai hangvételének beállítása.
+    Példa:
+    javascript
+
+    TONE: A válasz legyen udvarias, segítőkész és kissé biztató.
+
+Egy Komplett Strukturált Prompt Példa
+
+Az alábbiakban egy teljes, strukturált prompt sablon látható, amely a fent bemutatott elemeket használja. Ez a példa bemutatja, hogyan lehet ezeket az elemeket egy koherens egésszé összefűzni az LLMService-ben.
+javascript
+
+SYSTEM: Ön egy magyar nyelvű, professzionális tartalomíró, aki SEO-optimalizált cikkeket készít. A feladata, hogy a megadott témáról és kulcsszavakról írjon egy rövid, informatív bevezetőt.
+
+TASK: Írjon egy 150-200 szavas bevezetőt egy blogbejegyzéshez.
+
+CONTEXT:
+A blogbejegyzés címe: "A mesterséges intelligencia szerepe a modern üzleti életben". A cikk a KKV-k számára íródik, bemutatva az AI előnyeit és gyakorlati alkalmazásait.
+
+INPUT:
+- Fő téma: Mesterséges intelligencia a KKV-k számára
+- Kulcsszavak: AI, KKV, digitalizáció, hatékonyság, versenyképesség
+- Célközönség: Kis- és középvállalkozások vezetői, döntéshozói
+
+OUTPUT_FORMAT: A bevezető egyetlen összefüggő bekezdés legyen.
+
+CONSTRAINTS:
+- A bevezető hossza 150-200 szó között legyen.
+- Legalább 3-4 alkalommal szerepeljenek benne a kulcsszavak.
+- Kerülje a túlságosan technikai zsargont.
+- A bevezető hívja fel a figyelmet a KKV-k előtt álló lehetőségekre.
+
+TONE: Professzionális, motiváló és kissé inspiráló.
+
+Prompt Sablonok és Változók Használata
+
+A hatékonyság növelése érdekében érdemes sablonokat készíteni a strukturált promptokból. Ezek a sablonok tartalmazhatnak helyőrzőket vagy változókat, amelyeket futási időben tölthetünk fel konkrét adatokkal. Ez lehetővé teszi, hogy ugyanazt a prompt struktúrát használjuk különböző bemeneti adatokkal, minimálisra csökkentve az ismétléseket és növelve a rugalmasságot.
+
+Például, egy Pythonban implementált sablon a következőképpen nézhet ki:
+python
+
+def generate_blog_intro_prompt(topic, keywords, target_audience, word_count_min, word_count_max):
+    prompt_template = f"""
+SYSTEM: Ön egy magyar nyelvű, professzionális tartalomíró, aki SEO-optimalizált cikkeket készít. A feladata, hogy a megadott témáról és kulcsszavakról írjon egy rövid, informatív bevezetőt.
+
+TASK: Írjon egy {word_count_min}-{word_count_max} szavas bevezetőt egy blogbejegyzéshez.
+
+CONTEXT:
+A blogbejegyzés címe: "{topic}". A cikk a {target_audience} számára íródik, bemutatva az AI előnyeit és gyakorlati alkalmazásait.
+
+INPUT:
+- Fő téma: Mesterséges intelligencia a KKV-k számára
+- Kulcsszavak: {', '.join(keywords)}
+- Célközönség: {target_audience}
+
+OUTPUT_FORMAT: A bevezető egyetlen összefüggő bekezdés legyen.
+
+CONSTRAINTS:
+- A bevezető hossza {word_count_min}-{word_count_max} szó között legyen.
+- Legalább 3-4 alkalommal szerepeljenek benne a kulcsszavak.
+- Kerülje a túlságosan technikai zsargont.
+- A bevezető hívja fel a figyelmet a KKV-k előtt álló lehetőségekre.
+
+TONE: Professzionális, motiváló és kissé inspiráló.
+"""
+    return prompt_template
+
+# Használat
+topic = "A mesterséges intelligencia szerepe a modern üzleti életben"
+keywords = ["AI", "KKV", "digitalizáció", "hatékonyság", "versenyképesség"]
+target_audience = "Kis- és középvállalkozások vezetői, döntéshozói"
+word_count_min = 150
+word_count_max = 200
+
+prompt = generate_blog_intro_prompt(topic, keywords, target_audience, word_count_min, word_count_max)
+# Ezt a "prompt" változót küldhetjük el az LLMService API-nak
+print(prompt)
+
+Gyakorlati Tippek a Strukturált Prompt Kialakításához
+
+A hatékony strukturált promptok megírásához érdemes néhány bevált gyakorlatot követni. Ezek a tippek segítenek maximalizálni az LLM teljesítményét és minimalizálni a nem kívánt eredményeket.
+1. Legyen Specifikus és Egyértelmű
+
+Kerülje a homályos vagy kétértelmű megfogalmazásokat. Minél pontosabban határozza meg a feladatot, a kontextust és a kimeneti elvárásokat, annál jobb minőségű válaszokat kap. Például, a "írj valamit a kávéról" helyett "írj egy 150 szavas marketing szöveget a specialty kávék egészségügyi előnyeiről, kiemelve az antioxidánsokat."
+2. Használjon Elválasztókat
+
+A prompt különböző szakaszait (pl. SYSTEM:, TASK:, CONTEXT:) jól látható elválasztókkal válassza el, mint például címsorok, bullet pointok, vagy speciális karakterek (pl. ---, ###). Ez segíti az LLM-et a különböző információtípusok felismerésében és értelmezésében. A """ vagy --- karakterekkel bekeretezett hosszú szövegek, adatok is segítik a kontextus egyértelmű elhatárolását.
+3. Iteráljon és Teszteljen
+
+A tökéletes prompt ritkán születik meg elsőre. Kezdjen egy alapvető struktúrával, majd finomítsa azt az LLM válaszai alapján. Teszteljen különböző megfogalmazásokat, sorrendeket és részletezettségi szinteket, amíg el nem éri a kívánt eredményt. Használjon A/B tesztelést, ha lehetséges, a különböző prompt verziók hatékonyságának mérésére.
+4. Fontolja meg a Rendszerüzenet Jelentőségét
+
+A rendszerüzenet az egyik legerősebb eszköz a promptban, mivel befolyásolja az LLM alapvető viselkedését. Használja ezt a részt arra, hogy meghatáro
+
+Was this guide helpful?
